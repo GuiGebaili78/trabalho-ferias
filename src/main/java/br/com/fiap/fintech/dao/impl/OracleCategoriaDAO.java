@@ -2,6 +2,11 @@ package br.com.fiap.fintech.dao.impl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 import br.com.fiap.fintech.bean.Categoria;
 import br.com.fiap.fintech.dao.CategoriaDAO;
@@ -17,34 +22,165 @@ public class OracleCategoriaDAO implements CategoriaDAO {
 
 	public void cadastrar(Categoria categoria) throws DBException {
 		PreparedStatement stmt = null;
-		
+
 		try {
 			ConnectionManager.getinstance().getConnection();
-		String sql = "insert into tb_categoria(cd_categ,tp_categ,ds_categ,ds_subcateg, data) values (SQ_TB_CATEGORIA.NEXTVAL, ?,?,?,?)";
-		stmt = conexao.prepareStatement(sql);
-		stmt = setString(1, categoria.getTp_categ());
-		stmt = setString (2, categoria.getDs_categ());
-		stmt = setString(3, categoria.getDs_subcateg());
-		stmt = setDate (4, categoria.getData());
-		
-		stmt.executeUpdate();
+			String sql = "insert into tb_categoria(cd_categ,tp_categ,ds_categ,ds_subcateg, data) values (SQ_TB_CATEGORIA.NEXTVAL, ?,?,?,?)";
+			stmt = conexao.prepareStatement(sql);
+			stmt = setString(1, categoria.getTp_categ());
+			stmt = setString(2, categoria.getDs_categ());
+			stmt = setString(3, categoria.getDs_subcateg());
+			stmt = setDate(4, categoria.getData());
+
+			stmt.executeUpdate();
 		} catch (SQLExeption e) {
 			e.printStackTrace();
-			throw new DBExeption ("Erro ao cadastrar.");
+			throw new DBExeption("Erro ao cadastrar.");
 		} finally {
 			try {
 				stmt.close();
+				conexao.close();
 			} catch (SQLExeption e) {
 				e.printStackTrace();
 			}
 		}
 	}
-	
-			}
-		
-		
 
-	
+	@Override
+	public void atualizar(Categoria categoria) throws DBException {
+		PreparedStatement stmt = null;
+
+		try {
+			conexao = ConnectionManager.getinstance().getConnection();
+			String sql = "update tb_categoria set tp_categ = ?, ds_categ = ?,ds_subcateg = ?, data = ?, where cd_categ = ? ";
+			stmt = conexao.prepareStatement(sql);
+			stmt.setString(1, categoria.getTp_categ());
+			stmt.setString(2, categoria.getDs_categ());
+			stmt.setString(3, categoria.getDs_subcateg());
+			java.sql.Date data = new java.sql.Date(categoria.getData().getTimeInMillis());
+			stmt.setDate(4, data);
+			stmt.setInt(5, categoria.getCd_categ());
+
+			stmt.executeUpdate();
+		} catch (SQLExeption e) {
+			e.printStackTrace();
+			throw new DBExeption("Erro ao atualizar.");
+		} finally {
+			try {
+				stmt.close();
+				conexao.close();
+			} catch (SQLExeption e) {
+				e.printStackTrace();
+
+			}
 		}
 	}
+
+	@Override
+	public void remover (int cd_categ) throws DBExeption {
+		PreparedStatement stmt = null;
+		
+		try {
+			conexao = ConnectionManager.getinstance().getConnection();
+			String sql = "delete from tb_categoria where cd_categ = ?";
+			stmt = conexao.prepareStatement(sql);
+			stmt.setInt(1, cd_categ);
+			stmt.executeUpdate();
+		} catch (SQLExeption e) {
+			e.printStackTrace();
+			throw new DBExeption("Erro ao remover.");
+		} finally {
+			try {
+				stmt.close();
+				conexao.close();
+			} catch (SQLExeption e) {
+				e.printStackTrace();
+			}
+		}
+
+	@Override
+	public Categoria buscar(int cd_categ) {
+		Categoria catgoria = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+
+		try {
+			conexao = ConnectionManager.getinstance().getConnection();
+			stmt = conexao.prepareStatement("select * from tb_categoria = tb_categoria.cd_categ = ?");
+			stmt.setInt(1, cd_categ);
+			rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				int codigo = rs.getInt("cd_categ");
+				String tipo = rs.getString("tp_categ");
+				String descricao = rs.getString("ds_categ");
+				String subcateg = rs.getString("ds_subcateg");
+				java.sql.Date data = rs.getDate("data");
+				Calendar data = Calendar.getInstance();
+				data.setTimeInMillis(data.getTime());
+
+				categoria = new Categoria(cd_categ, tp_categ, ds_categ, ds_subcateg, data);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				stmt.close();
+				rs.close();
+				conexao.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return categoria;
+
+	}
+
+	@Override
+	public List<Categoria> lista = new ArrayList<Categoria>();
+	PreparedStatement stmt = null;
+	ResultSet rs = null;try
+	{
+		conexao = ConnectionManager.getinstance().getConnection();
+
+		stmt = conexao.prepareStatement("select * from tb_categoria = tb_categoria.cd_categ");
+		rs = stmt.executeQuery();
+
+		// Precorre os registros encontrados
+		while (rs.next()) {
+			int codigo = rs.getInt("cd_categ");
+			String tipo = rs.getString("tp_categ");
+			String descricao = rs.getString("ds_categ");
+			String subcateg = rs.getString("ds_subcateg");
+			java.sql.Date data = rs.getDate("data");
+			Calendar data = Calendar.getInstance();
+			data.setTimeInMillis(data.getTime());
+
+			categoria = new Categoria(cd_categ, tp_categ, ds_categ, ds_subcateg, data);
+		}
+
+	}catch(
+	SQLException e)
+	{
+		e.printStackTrace();
+	}finally
+	{
+		try {
+			stmt.close();
+			rs.close();
+			conexao.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}return lista;
+
+}
+
+}
+
+}
+
+}
+
 }
