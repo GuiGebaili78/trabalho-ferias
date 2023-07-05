@@ -2,10 +2,7 @@ package br.com.fiap.fintech.dao.impl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import br.com.fiap.fintech.bean.Categoria;
@@ -26,7 +23,7 @@ public class OracleCategoriaDAO implements CategoriaDAO {
 		try {
 			conexao = ConnectionManager.getinstance().getConnection();
 			String sql = "insert into tb_categoria(cd_categ,tp_categ,ds_categ,ds_subcateg, data) values (SQ_TB_CATEGORIA.NEXTVAL, ?,?,?,?)";
-			stmt.conexao.prepareStatement(sql);
+			stmt = conexao.prepareStatement(sql);
 			stmt.setString(1, categoria.getTp_categ());
 			stmt.setString(2, categoria.getDs_categ());
 			stmt.setString(3, categoria.getDs_subcateg());
@@ -77,9 +74,9 @@ public class OracleCategoriaDAO implements CategoriaDAO {
 	}
 
 	@Override
-	public void remover (int cd_categ) throws DBException {
+	public void remover(int cd_categ) throws DBException {
 		PreparedStatement stmt = null;
-		
+
 		try {
 			conexao = ConnectionManager.getinstance().getConnection();
 			String sql = "delete from tb_categoria where cd_categ = ?";
@@ -95,15 +92,14 @@ public class OracleCategoriaDAO implements CategoriaDAO {
 				conexao.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
-			
+
 			}
 		}
 	}
-	
 
 	@Override
 	public Categoria buscar(int cd_categ) {
-		Categoria catgoria = null;
+		Categoria categoria = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 
@@ -118,11 +114,11 @@ public class OracleCategoriaDAO implements CategoriaDAO {
 				String tipo = rs.getString("tp_categ");
 				String descricao = rs.getString("ds_categ");
 				String subcateg = rs.getString("ds_subcateg");
-				java.sql.Date data = rs.getDate("data");
-				Calendar data = Calendar.getInstance();
-				data.setTimeInMillis(data.getTime());
+				java.sql.Date dataSQL = rs.getDate("data");
+                Calendar data = Calendar.getInstance();
+                data.setTimeInMillis(dataSQL.getTime());
 
-				Categoria categoria = new Categoria(cd_categ, tp_categ, ds_categ, ds_subcateg, data);
+				categoria = new Categoria(cd_categ, tp_categ, ds_categ, ds_subcateg, data);
 			}
 
 		} catch (SQLException e) {
@@ -135,20 +131,23 @@ public class OracleCategoriaDAO implements CategoriaDAO {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-		}		return categoria;
-	
-	
-	
+		}
+				return categoria;
+	}
+
 
 	
+
+
+
 
 	@Override
-	public List<Categoria> lista = new ArrayList<Categoria>();
-	PreparedStatement stmt = null;
-	ResultSet rs = null;
+	public List<Categoria> listar() {
+        List<Categoria> lista = new ArrayList<>();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
 
-	try
-	{
+	try {
 		conexao = ConnectionManager.getinstance().getConnection();
 
 		stmt = conexao.prepareStatement("select * from tb_categoria = tb_categoria.cd_categ");
@@ -160,14 +159,15 @@ public class OracleCategoriaDAO implements CategoriaDAO {
 			String tipo = rs.getString("tp_categ");
 			String descricao = rs.getString("ds_categ");
 			String subcateg = rs.getString("ds_subcateg");
-			java.sql.Date data = rs.getDate("data");
-			Calendar data = Calendar.getInstance();
-			data.setTimeInMillis(data.getTime());
+			java.sql.Date dataSQL = rs.getDate("data");
+            Calendar data = Calendar.getInstance();
+            data.setTimeInMillis(dataSQL.getTime());
 
-			Categoria categoria = new Categoria(cd_categ, tp_categ, ds_categ, ds_subcateg, data);
-		}
 
-	}catch(
+            Categoria categoria = new Categoria(codigo, tipo, descricao, subcateg, data);
+            lista.add(categoria);
+
+		} catch(
 	SQLException e)
 	{
 		e.printStackTrace();
@@ -183,5 +183,6 @@ public class OracleCategoriaDAO implements CategoriaDAO {
 	}return lista;
 
 }
+	
 
-}
+
