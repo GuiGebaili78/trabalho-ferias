@@ -24,23 +24,23 @@ public class OracleCategoriaDAO implements CategoriaDAO {
 		PreparedStatement stmt = null;
 
 		try {
-			ConnectionManager.getinstance().getConnection();
+			conexao = ConnectionManager.getinstance().getConnection();
 			String sql = "insert into tb_categoria(cd_categ,tp_categ,ds_categ,ds_subcateg, data) values (SQ_TB_CATEGORIA.NEXTVAL, ?,?,?,?)";
-			stmt = conexao.prepareStatement(sql);
-			stmt = setString(1, categoria.getTp_categ());
-			stmt = setString(2, categoria.getDs_categ());
-			stmt = setString(3, categoria.getDs_subcateg());
-			stmt = setDate(4, categoria.getData());
+			stmt.conexao.prepareStatement(sql);
+			stmt.setString(1, categoria.getTp_categ());
+			stmt.setString(2, categoria.getDs_categ());
+			stmt.setString(3, categoria.getDs_subcateg());
+			stmt.setDate(4, new java.sql.Date(categoria.getData().getTimeInMillis()));
 
 			stmt.executeUpdate();
-		} catch (SQLExeption e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DBExeption("Erro ao cadastrar.");
+			throw new DBException("Erro ao cadastrar.");
 		} finally {
 			try {
 				stmt.close();
 				conexao.close();
-			} catch (SQLExeption e) {
+			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
@@ -62,14 +62,14 @@ public class OracleCategoriaDAO implements CategoriaDAO {
 			stmt.setInt(5, categoria.getCd_categ());
 
 			stmt.executeUpdate();
-		} catch (SQLExeption e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DBExeption("Erro ao atualizar.");
+			throw new DBException("Erro ao atualizar.");
 		} finally {
 			try {
 				stmt.close();
 				conexao.close();
-			} catch (SQLExeption e) {
+			} catch (SQLException e) {
 				e.printStackTrace();
 
 			}
@@ -77,7 +77,7 @@ public class OracleCategoriaDAO implements CategoriaDAO {
 	}
 
 	@Override
-	public void remover (int cd_categ) throws DBExeption {
+	public void remover (int cd_categ) throws DBException {
 		PreparedStatement stmt = null;
 		
 		try {
@@ -86,17 +86,20 @@ public class OracleCategoriaDAO implements CategoriaDAO {
 			stmt = conexao.prepareStatement(sql);
 			stmt.setInt(1, cd_categ);
 			stmt.executeUpdate();
-		} catch (SQLExeption e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DBExeption("Erro ao remover.");
+			throw new DBException("Erro ao remover.");
 		} finally {
 			try {
 				stmt.close();
 				conexao.close();
-			} catch (SQLExeption e) {
+			} catch (SQLException e) {
 				e.printStackTrace();
+			
 			}
 		}
+	}
+	
 
 	@Override
 	public Categoria buscar(int cd_categ) {
@@ -119,7 +122,7 @@ public class OracleCategoriaDAO implements CategoriaDAO {
 				Calendar data = Calendar.getInstance();
 				data.setTimeInMillis(data.getTime());
 
-				categoria = new Categoria(cd_categ, tp_categ, ds_categ, ds_subcateg, data);
+				Categoria categoria = new Categoria(cd_categ, tp_categ, ds_categ, ds_subcateg, data);
 			}
 
 		} catch (SQLException e) {
@@ -132,15 +135,19 @@ public class OracleCategoriaDAO implements CategoriaDAO {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-		}
-		return categoria;
+		}		return categoria;
+	
+	
+	
 
-	}
+	
 
 	@Override
 	public List<Categoria> lista = new ArrayList<Categoria>();
 	PreparedStatement stmt = null;
-	ResultSet rs = null;try
+	ResultSet rs = null;
+
+	try
 	{
 		conexao = ConnectionManager.getinstance().getConnection();
 
@@ -157,7 +164,7 @@ public class OracleCategoriaDAO implements CategoriaDAO {
 			Calendar data = Calendar.getInstance();
 			data.setTimeInMillis(data.getTime());
 
-			categoria = new Categoria(cd_categ, tp_categ, ds_categ, ds_subcateg, data);
+			Categoria categoria = new Categoria(cd_categ, tp_categ, ds_categ, ds_subcateg, data);
 		}
 
 	}catch(
@@ -174,12 +181,6 @@ public class OracleCategoriaDAO implements CategoriaDAO {
 			e.printStackTrace();
 		}
 	}return lista;
-
-}
-
-}
-
-}
 
 }
 
