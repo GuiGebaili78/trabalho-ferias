@@ -9,7 +9,7 @@ public class Categoria {
 	private String tp_categ;
 	private String ds_categ;
 	private String ds_subcateg;
-	private Date data = new Date(Calendar.getInstance().getTimeInMillis());
+	private Date data;
 
 	public Categoria() {
 		super();
