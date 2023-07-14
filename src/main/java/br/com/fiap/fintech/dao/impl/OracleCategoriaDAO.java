@@ -77,7 +77,7 @@ public class OracleCategoriaDAO implements CategoriaDAO {
 				}
 			}
 		} catch (SQLException e) {
-			e.printStackTrace(); // Ou trate a exceção adequadamente
+			e.printStackTrace();
 		}
 		return categoria;
 	}
