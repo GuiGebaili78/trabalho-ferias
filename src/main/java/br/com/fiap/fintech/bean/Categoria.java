@@ -60,7 +60,7 @@ public class Categoria {
 		return data;
 	}
 
-	public void setData(Calendar data2) {
+	public void setData(Calendar data) {
 		// TODO Auto-generated method stub
 		
 	}
