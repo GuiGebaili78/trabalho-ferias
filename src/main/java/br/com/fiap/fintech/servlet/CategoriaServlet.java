@@ -1,28 +1,51 @@
 package br.com.fiap.fintech.servlet;
 
-import br.com.fiap.fintech.bean.Categoria;
-import br.com.fiap.fintech.dao.CategoriaDAO;
-import br.com.fiap.fintech.dao.impl.OracleCategoriaDAO;
-import br.com.fiap.fintech.exception.DBException;
+import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.List;
+
+import br.com.fiap.fintech.bean.Categoria;
+import br.com.fiap.fintech.dao.CategoriaDAO;
+import br.com.fiap.fintech.dao.impl.OracleCategoriaDAO;
+import br.com.fiap.fintech.exception.DBException;
 
 public class CategoriaServlet extends HttpServlet {
-
+    private static final long serialVersionUID = 1L;
     private CategoriaDAO categoriaDAO;
 
-    @Override
-    public void init() throws ServletException {
-        super.init();
+    public void init() {
         categoriaDAO = new OracleCategoriaDAO();
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String action = request.getParameter("action");
+
+        if (action != null) {
+            switch (action) {
+                case "list":
+                    listarCategorias(request, response);
+                    break;
+                case "search":
+                    buscarCategoria(request, response);
+                    break;
+                case "delete":
+                    excluirCategoria(request, response);
+                    break;
+                default:
+                    response.sendRedirect("index.jsp");
+            }
+        } else {
+            response.sendRedirect("index.jsp");
+        }
+    }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         String action = request.getParameter("action");
 
         if (action != null) {
@@ -33,100 +56,86 @@ public class CategoriaServlet extends HttpServlet {
                 case "update":
                     atualizarCategoria(request, response);
                     break;
-                case "delete":
-                    removerCategoria(request, response);
-                    break;
                 default:
-                    response.sendRedirect("categoria.jsp");
-                    break;
+                    response.sendRedirect("index.jsp");
             }
         } else {
-            response.sendRedirect("categoria.jsp");
+            response.sendRedirect("index.jsp");
         }
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String action = request.getParameter("action");
+    private void listarCategorias(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        List<Categoria> categorias = categoriaDAO.listar();
+        request.setAttribute("categorias", categorias);
+        request.getRequestDispatcher("listagem.jsp").forward(request, response);
+    }
 
-        if (action != null) {
-            switch (action) {
-                case "edit":
-                    exibirFormularioEdicao(request, response);
-                    break;
-                default:
-                    response.sendRedirect("categoria.jsp");
-                    break;
-            }
+    private void buscarCategoria(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        int codigo = Integer.parseInt(request.getParameter("codigo"));
+        Categoria categoria = categoriaDAO.buscar(codigo);
+
+        if (categoria != null) {
+            request.setAttribute("categoria", categoria);
+            request.getRequestDispatcher("visualizar.jsp").forward(request, response);
         } else {
-            listarCategorias(request, response);
+            response.sendRedirect("index.jsp");
         }
     }
 
-    private void cadastrarCategoria(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String despesaReceita = request.getParameter("despesaReceita");
-        String descricao = request.getParameter("ds_categ");
-        String subcategoria = request.getParameter("ds_subcateg");
+    private void cadastrarCategoria(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String tipoCategoria = request.getParameter("despesaReceita");
+        String descricao = request.getParameter("descricao");
+        String subcategoria = request.getParameter("subcategoria");
 
         Categoria categoria = new Categoria();
-        categoria.setTp_categ(despesaReceita);
+        categoria.setTp_categ(tipoCategoria);
         categoria.setDs_categ(descricao);
         categoria.setDs_subcateg(subcategoria);
 
         try {
             categoriaDAO.cadastrar(categoria);
-            response.sendRedirect("CategoriaServlet"); // Redireciona para a página de categorias após o cadastro
+            response.sendRedirect("CategoriaServlet?action=list");
         } catch (DBException e) {
-            // Trate a exceção adequadamente de acordo com o seu fluxo de erro
-            e.printStackTrace();
-            response.sendRedirect("erro.jsp"); // Redireciona para a página de erro
+            request.setAttribute("mensagem", "Erro ao cadastrar categoria.");
+            request.getRequestDispatcher("index.jsp").forward(request, response);
         }
     }
 
-    private void atualizarCategoria(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int codigo = Integer.parseInt(request.getParameter("cd_categ"));
-        String despesaReceita = request.getParameter("despesaReceita");
-        String descricao = request.getParameter("ds_categ");
-        String subcategoria = request.getParameter("ds_subcateg");
+    private void atualizarCategoria(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        int codigo = Integer.parseInt(request.getParameter("codigo"));
+        String tipoCategoria = request.getParameter("despesaReceita");
+        String descricao = request.getParameter("descricao");
+        String subcategoria = request.getParameter("subcategoria");
 
         Categoria categoria = new Categoria();
         categoria.setCd_categ(codigo);
-        categoria.setTp_categ(despesaReceita);
+        categoria.setTp_categ(tipoCategoria);
         categoria.setDs_categ(descricao);
         categoria.setDs_subcateg(subcategoria);
 
         try {
             categoriaDAO.atualizar(categoria);
-            response.sendRedirect("CategoriaServlet"); // Redireciona para a página de categorias após a atualização
+            response.sendRedirect("CategoriaServlet?action=list");
         } catch (DBException e) {
-            // Trate a exceção adequadamente de acordo com o seu fluxo de erro
-            e.printStackTrace();
-            response.sendRedirect("erro.jsp"); // Redireciona para a página de erro
+            request.setAttribute("mensagem", "Erro ao atualizar categoria.");
+            request.getRequestDispatcher("index.jsp").forward(request, response);
         }
     }
 
-    private void removerCategoria(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int codigo = Integer.parseInt(request.getParameter("cd_categ"));
+    private void excluirCategoria(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        int codigo = Integer.parseInt(request.getParameter("codigo"));
 
         try {
             categoriaDAO.remover(codigo);
-            response.sendRedirect("CategoriaServlet"); // Redireciona para a página de categorias após a remoção
+            response.sendRedirect("CategoriaServlet?action=list");
         } catch (DBException e) {
-            // Trate a exceção adequadamente de acordo com o seu fluxo de erro
-            e.printStackTrace();
-            response.sendRedirect("erro.jsp"); // Redireciona para a página de erro
+            request.setAttribute("mensagem", "Erro ao excluir categoria.");
+            request.getRequestDispatcher("index.jsp").forward(request, response);
         }
-    }
-
-    private void exibirFormularioEdicao(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int codigo = Integer.parseInt(request.getParameter("cd_categ"));
-        Categoria categoria = categoriaDAO.buscar(codigo);
-        request.setAttribute("categoria", categoria);
-        request.getRequestDispatcher("editar_categoria.jsp").forward(request, response);
-    }
-
-    private void listarCategorias(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Categoria> categorias = categoriaDAO.listar();
-        request.setAttribute("categorias", categorias);
-        request.getRequestDispatcher("categoria.jsp").forward(request, response);
     }
 }
