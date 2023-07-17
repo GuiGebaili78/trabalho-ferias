@@ -1,12 +1,8 @@
 <!-- cadastro-categoria.jsp -->
-<%@ page import="br.com.fiap.fintech.bean. * " %>
-<%@ page import="br.com.fiap.fintech.dao. * " %>
-<%@ page import="br.com.fiap.fintech.controller. * " %>
-<%@ page import="br.com.fiap.fintech.dao.impl. * " %>
-<%@ page import="br.com.fiap.fintech.factory. * " %>
-<%@ page import="br.com.fiap.fintech.singleton. * " %>
+
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,6 +14,12 @@
 	<%@ include file="header.jsp"%>
 	<div class="container">
 		<h1>Cadastro de Categoria</h1>
+		<c:if test="${not empty msg }">
+			<div class="alert alert-success">${msg}</div>
+		</c:if>
+		<c:if test="${not empty erro }">
+			<div class="alert alert-danger">${erro}</div>
+		</c:if>
 		<form action="CategoriaServlet" method="post">
 			<input type="hidden" name="action" value="cadastrar">
 			<div class="form-group">

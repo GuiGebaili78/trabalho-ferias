@@ -32,8 +32,8 @@ public class CategoriaDAOTeste {
 
 		
 		despesa2.setTp_categ("Despesa");
-		despesa2.setDs_categ("Alimentação");
-		despesa2.setDs_subcateg("Feira");
+		despesa2.setDs_categ("Moradia");
+		despesa2.setDs_subcateg("Conta de gás");
 
 		dao.cadastrar(despesa2);
 
