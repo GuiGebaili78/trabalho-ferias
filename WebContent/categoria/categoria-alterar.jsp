@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body>
-<%@ include file="header.jsp" %>
+<%@ include file="../includes/header.jsp" %>
     <div class="container">
         <h1>Alteração de Cadastro</h1>
         <% Categoria categoria = (Categoria) request.getAttribute("categoria"); %>
@@ -38,6 +38,6 @@
             <a href="CategoriaServlet?action=remover&cd_categ=<%= categoria.getCd_categ() %>" class="btn btn-danger">Excluir</a>
         </form>
     </div>
-    <%@ include file="footer.jsp" %>
+    <%@ include file="../includes/footer.jsp" %>
 </body>
 </html>

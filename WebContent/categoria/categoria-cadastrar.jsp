@@ -1,4 +1,4 @@
-<!-- cadastro-categoria.jsp -->
+<!-- categoria-cadastrar.jsp -->
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
@@ -11,7 +11,7 @@
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body>
-	<%@ include file="header.jsp"%>
+	<%@ include file="../includes/header.jsp"%>
 	<div class="container">
 		<h1>Cadastro de Categoria</h1>
 		<c:if test="${not empty msg }">
@@ -39,6 +39,6 @@
 		</form>
 	</div>
 
-	<%@ include file="footer.jsp"%>
+	<%@ include file="../includes/footer.jsp"%>
 </body>
 </html>

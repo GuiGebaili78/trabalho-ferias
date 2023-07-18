@@ -4,19 +4,10 @@
 	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
 	id="WebApp_ID" version="4.0">
 	<display-name>trabalho-ferias</display-name>
+
+
 	
 
-	<!-- Esse era o modo usado até o 2.0 -->
-	
-	<!-- <servlet>
-		<servlet-name>CategoriaServlet</servlet-name>
-		<servlet-class>br.com.fiap.fintech.controller.CategoriaServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>CategoriaServlet</servlet-name>
-		<url-pattern>/CategoriaServlet</url-pattern>
-	</servlet-mapping> -->
-	
 
 </web-app>
 

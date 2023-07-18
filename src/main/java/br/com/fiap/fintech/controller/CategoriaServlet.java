@@ -33,11 +33,11 @@ public class CategoriaServlet extends HttpServlet {
 				listarCategorias(request, response);
 				break;
 			default:
-				response.sendRedirect("cadastro-categoria.jsp");
+				response.sendRedirect("categoria-cadastrar.jsp");
 				break;
 			}
 		} else {
-			response.sendRedirect("cadastro-categoria.jsp");
+			response.sendRedirect("categoria-cadastrar.jsp");
 		}
 	}
 
@@ -52,7 +52,7 @@ public class CategoriaServlet extends HttpServlet {
 		} else if (action != null && action.equals("delete")) {
 			excluirCategoria(request, response);
 		} else {
-			response.sendRedirect("cadastro-categoria.jsp");
+			response.sendRedirect("categoria-cadastrar.jsp");
 		}
 	}
 
@@ -65,12 +65,11 @@ public class CategoriaServlet extends HttpServlet {
 
 		try {
 			categoriaDAO.cadastrar(categoria);
-			request.setAttribute("msg", "Categoria cadastrado!");
-			//response.sendRedirect("cadastro-categoria.jsp");
-			request.getRequestDispatcher("cadastro-categoria.jsp").forward(request, response);
+			request.setAttribute("msg", "Categoria cadastrada!");
+			request.getRequestDispatcher("categoria-cadastrar.jsp").forward(request, response);
 		} catch (DBException e) {
 			request.setAttribute("erro", "Erro ao cadastrar categoria!");
-			request.getRequestDispatcher("cadastro-categoria.jsp").forward(request, response);
+			request.getRequestDispatcher("categoria-cadastrar.jsp").forward(request, response);
 		}
 	}
 
@@ -87,10 +86,10 @@ public class CategoriaServlet extends HttpServlet {
 				categoriaDAO.atualizar(categoria);
 				response.sendRedirect("CategoriaServlet?action=list");
 			} catch (DBException e) {
-				response.sendRedirect("listar-categorias.jsp?erro=" + e.getMessage());
+				response.sendRedirect("categoria-listar.jsp?erro=" + e.getMessage());
 			}
 		} else {
-			response.sendRedirect("listar-categorias.jsp?erro=Categoria não encontrada");
+			response.sendRedirect("categoria-listar.jsp?erro=Categoria não encontrada");
 		}
 	}
 
@@ -101,7 +100,7 @@ public class CategoriaServlet extends HttpServlet {
 			categoriaDAO.remover(cd_categ);
 			response.sendRedirect("CategoriaServlet?action=list");
 		} catch (DBException e) {
-			response.sendRedirect("listar-categorias.jsp?erro=" + e.getMessage());
+			response.sendRedirect("categoria-listar.jsp?erro=" + e.getMessage());
 		}
 	}
 
@@ -109,6 +108,6 @@ public class CategoriaServlet extends HttpServlet {
 			throws ServletException, IOException {
 		List<Categoria> categorias = categoriaDAO.listar();
 		request.setAttribute("categorias", categorias);
-		request.getRequestDispatcher("listar-categorias.jsp").forward(request, response);
+		request.getRequestDispatcher("categoria-listar.jsp").forward(request, response);
 	}
 }
