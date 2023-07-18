@@ -47,9 +47,9 @@ public class CategoriaServlet extends HttpServlet {
 		String action = request.getParameter("action");
 		if (action != null && action.equals("cadastrar")) {
 			cadastrarCategoria(request, response);
-		} else if (action != null && action.equals("update")) {
+		} else if (action != null && action.equals("alterar")) {
 			atualizarCategoria(request, response);
-		} else if (action != null && action.equals("delete")) {
+		} else if (action != null && action.equals("excluir")) {
 			excluirCategoria(request, response);
 		} else {
 			response.sendRedirect("categoria-cadastrar.jsp");
@@ -86,7 +86,7 @@ public class CategoriaServlet extends HttpServlet {
 				categoriaDAO.atualizar(categoria);
 				response.sendRedirect("CategoriaServlet?action=list");
 			} catch (DBException e) {
-				response.sendRedirect("categoria-listar.jsp?erro=" + e.getMessage());
+				response.sendRedirect("categoria-alterar.jsp?erro=" + e.getMessage());
 			}
 		} else {
 			response.sendRedirect("categoria-listar.jsp?erro=Categoria não encontrada");
@@ -100,7 +100,7 @@ public class CategoriaServlet extends HttpServlet {
 			categoriaDAO.remover(cd_categ);
 			response.sendRedirect("CategoriaServlet?action=list");
 		} catch (DBException e) {
-			response.sendRedirect("categoria-listar.jsp?erro=" + e.getMessage());
+			response.sendRedirect("categoria-excluir.jsp?erro=" + e.getMessage());
 		}
 	}
 

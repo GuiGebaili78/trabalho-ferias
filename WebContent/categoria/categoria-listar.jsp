@@ -18,7 +18,7 @@
 <%@ include file="../includes/header.jsp" %>
     <div class="container">
         <h1>Lista de Categorias</h1>
-        <a href="cadastro-categoria.jsp" class="btn btn-primary">Cadastrar Categoria</a>
+        <a href="categoria-cadastrar.jsp" class="btn btn-primary">Cadastrar Categoria</a>
         <br><br>
         <table class="table">
             <thead>
@@ -41,8 +41,8 @@
                     <td><%= categoria.getDs_subcateg() %></td>
                     <td><%= categoria.getData() %></td>
                     <td>
-                        <a href="alteracao-cadastro.jsp?cd_categ=<%= categoria.getCd_categ() %>" class="btn btn-info">Alterar</a>
-                        <a href="CategoriaServlet?action=remover&cd_categ=<%= categoria.getCd_categ() %>" class="btn btn-danger">Excluir</a>
+                        <a href="categoria-alterar.jsp?cd_categ=<%= categoria.getCd_categ() %>" class="btn btn-info">Alterar</a>
+                        <a href="CategoriaServlet?action=excluir&cd_categ=<%= categoria.getCd_categ() %>" class="btn btn-danger">Excluir</a>
                     </td>
                 </tr>
                 <% } %>

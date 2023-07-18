@@ -20,7 +20,7 @@
         <h1>Alteração de Cadastro</h1>
         <% Categoria categoria = (Categoria) request.getAttribute("categoria"); %>
         <form action="CategoriaServlet" method="post">
-            <input type="hidden" name="action" value="atualizar">
+            <input type="hidden" name="action" value="alterar">
             <input type="hidden" name="cd_categ" value="<%= categoria.getCd_categ() %>">
             <div class="form-group">
                 <label for="despesaReceita">Despesa/Receita:</label>
