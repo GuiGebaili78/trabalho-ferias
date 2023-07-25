@@ -1,4 +1,4 @@
-<!-- listar-categorias.jsp -->
+<!-- categoria-listar.jsp -->
 <%@ page import="java.util.List" %>
 <%@ page import="br.com.fiap.fintech.bean. * " %>
 <%@ page import="br.com.fiap.fintech.dao. * " %>
